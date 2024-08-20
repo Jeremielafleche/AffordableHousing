@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Affordable Housing Map of Canada</title>
+    <title>Affordable Housing in Canada</title>
     <meta property="og:description" content="When a user hovers over a custom marker, show a popup containing more information." />
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,7 +46,7 @@
 </head>
 <body>
     <!-- Header -->
-    <h1>Affordable Housing Map of Canada</h1>
+    <h1>Affordable Housing in Canada</h1>
     
     <!-- Map Container -->
     <div id='map'></div>   
@@ -57,12 +57,11 @@
 
     <div id="state-legend" class="legend"> 
         <h4>Median Total Income in 2020</br>Among Census Recipients ($) </h4>
-          <div><span style="background-color: #E0ECF4"></span>&#60;20000</div>
-          <div><span style="background-color: #BFD3E6"></span>40000</div>
-          <div><span style="background-color: #8C96C6"></span>60000</div>
-          <div><span style="background-color: #8C6BB1"></span>80000</div>
-          <div><span style="background-color: #810F7C"></span>100000</div>
-          <div><span style="background-color: #4D004B"></span>&gt;120000</div>
+          <div><span style="background-color: #fdd0a2"></span>&#60;20000</div>
+          <div><span style="background-color: #fdae6b"></span>30000</div>
+          <div><span style="background-color: #fd8d3c"></span>40000</div>
+          <div><span style="background-color: #f16913"></span>50000</div>
+          <div><span style="background-color: #8c2d04"></span>&gt;60000</div>
       </div>
     
     <!-- JavaScript -->
@@ -121,8 +120,8 @@
                 
                 // Function to add CensusMapper data with income information
                 async function addCensusMapperData() {
-                    const censusMapperUrl = 'https://censusmapper.ca/api/v1/geo.geojson?dataset=CA21&regions={%22CSD%22:[%225915022%22,%222466112%22,%222466117%22,%222466127%22,%222466023%22,%222466102%22,%222466107%22,%222466142%22,%222466097%22,%222466087%22,%222466072%22,%222466007%22,%222466058%22,%222466032%22,%222466062%22,%222466047%22,%223506008%22,%223520005%22,%224611040%22,%224806016%22],%22CD%22:[%221203%22,%221202%22,%221201%22,%221204%22,%221205%22,%221207%22,%221206%22,%221208%22,%221209%22,%221210%22,%221212%22,%221214%22,%221213%22,%221216%22,%221217%22,%221218%22,%221215%22,%221211%22]}&level=CT&api_key=CensusMapper_a663240ee567b8e87e4ddd6270be6edc';
-                    const incomeDataUrl = 'Data Income List.json';
+                    const censusMapperUrl = 'https://censusmapper.ca/api/v1/geo.geojson?dataset=CA21&regions={%22CSD%22:[%225915022%22,%223520005%22,%223506008%22,%221201006%22,%221202001%22,%221203001%22,%221203004%22,%221205001%22,%221205009%22,%221207001%22,%221205014%22,%221205004%22,%221201001%22,%221202004%22,%221204010%22,%221206001%22,%221208003%22,%221213001%22,%221214001%22,%221214006%22,%221213004%22,%221218001%22,%221218006%22,%221215011%22,%221215006%22,%221215001%22,%221216011%22,%221216006%22,%221216001%22,%221206009%22,%221207021%22,%221212001%22,%221210012%22,%221211001%22,%221211006%22,%221211009%22,%221211014%22],%22CT%22:[%229330021.00%22,%229330068.00%22,%229330062.00%22,%229330067.02%22,%229330067.01%22,%229330053.02%22,%229330053.01%22,%229330055.02%22,%229330055.01%22,%229330056.01%22,%229330058.00%22,%229330057.02%22,%229330057.01%22,%229330059.17%22,%229330059.11%22,%229330066.02%22,%229330066.01%22,%229330069.04%22,%229330069.02%22,%229330069.03%22,%229330044.00%22,%229330043.01%22,%229330043.02%22,%229330042.00%22,%229330025.00%22,%229330026.00%22,%229330027.01%22,%229330024.00%22,%229330008.01%22,%229330008.02%22,%229330023.00%22,%229330027.02%22,%229330022.00%22,%229330045.01%22,%229330045.02%22,%229330047.01%22,%229330047.02%22,%229330046.00%22,%229330041.02%22,%229330048.01%22,%229330048.02%22,%229330007.01%22,%229330009.00%22,%229330007.02%22,%229330005.00%22,%229330006.01%22,%229330006.02%22,%229330052.02%22,%229330052.01%22,%229330054.02%22,%229330054.01%22,%229330056.02%22],%22CMA%22:[%2224462%22,%2212210%22,%2212215%22,%2212205%22,%2212220%22,%2212225%22]}&level=CT&api_key=CensusMapper_a663240ee567b8e87e4ddd6270be6edc';
+                    const incomeDataUrl = 'non-market-housing (2).geojson';
 
                     const [geoResponse, incomeResponse] = await Promise.all([
                         fetch(censusMapperUrl),
@@ -130,14 +129,14 @@
                     ]);
 
                     const censusData = await geoResponse.json();
-                    const incomeData = JSON.parse(await incomeResponse.text());
+                    const incomeData = await incomeResponse.json();
 
                     console.log(typeof(incomeData))
                     censusData.features.map((e)=>{
                     const id =e.properties.id
+                    console.log(id)
                     // search for the id in the other dataset
-                    let result = incomeData.filter((e)=> parseFloat(e.GeoUID) === parseFloat(id))
-                    result[0]["householdIncome"] = parseFloat(result[0]["v_CA21_906: Median total income of household in 2020 ($)"])
+                    let result =incomeData.filter((e)=> parseInt(e.GeoUID) === (id))
                     console.log(result)
                     e.properties={...e.properties, ...result[0]}
                     e.id=e.properties.id
@@ -163,19 +162,17 @@
                     ['linear'],
                     ['get', 'householdIncome'],
                     20000,
-                    '#E0ECF4',
+                    '#fefbd8',
+                    30000,
+                    '#fdae6b',
                     40000,
-                    '#BFD3E6',
+                    '#fdae6b',
+                    50000,
+                    '#f16913',
                     60000,
-                    '#8C96C6',
-                    80000,
-                    '#8C6BB1',
-                    100000,
-                    '#810F7C',
-                    120000,
-                    '#4D004B'
+                    '#8c2d04'
                 ],
-                'fill-opacity': 0.6
+                'fill-opacity': 0.7
             }},  
         )
 
@@ -195,7 +192,7 @@
                 'fill-opacity': [
                     'case',
                     ['boolean', ['feature-state', 'hover'], false],
-                    0.7,
+                    0.6,
                     0
                 ]
             }
@@ -208,7 +205,7 @@
             'layout': {},
             'paint': {
                 'line-color': '#FFFFFF',
-                'line-width': 1.0
+                'line-width': 1.5
             }
         });
      // When the user moves their mouse over the state-fill layer, we'll update the
@@ -264,13 +261,11 @@ censusData.features.forEach(feature => {
         // When a click event occurs on a feature in the states layer, open a popup at the
         // location of the click, with description HTML from its properties.
         map.on('click', 'states-layer', (e) => {
-            
+            console.log(e.features[0].properties)
             const HTML = ` 
-            <p><strong>Region:</strong> ${e.features[0].properties["Region Name"]}</p>
-            <p><strong>Income ($):</strong> ${e.features[0].properties["v_CA21_906: Median total income of household in 2020 ($)"]}</p>
-            <p><strong>Area (sq km):</strong> ${e.features[0].properties["Area (sq km)"]}</p>
-            <p><strong>Dwellings:</strong> ${e.features[0].properties["Dwellings"]}</p>
-            <p><strong>Households:</strong> ${e.features[0].properties["Households"]}</p>`;
+
+            <p><strong>Income:</strong> ${e.features[0].properties["v_CA21_906: Median total income of household in 2020 ($)"]}</p>
+            <p><strong>Population:</strong> ${e.features[0].properties["Population"]}</p>`;
 
 
             new maplibregl.Popup()
@@ -283,8 +278,6 @@ censusData.features.forEach(feature => {
         map.on('mouseenter', 'states-layer', () => {
             map.getCanvas().style.cursor = 'pointer';
         });
-
-        
 
         // Change it back to a pointer when it leaves.
         map.on('mouseleave', 'states-layer', () => {
@@ -358,17 +351,6 @@ censusData.features.forEach(feature => {
                         });
 
                         map.addLayer({
-                            id: `${sourceId}-unclustered-point`,
-                            type: "symbol",
-                            source: sourceId,
-                            filter: ["!", ["has", "point_count"]],
-                            layout: {
-                                "icon-image": "house-icon",
-                                "icon-size": 0.06 // Adjusted the icon size
-                            }
-                        });
-
-                        map.addLayer({
                             id: `${sourceId}-clusters`,
                             type: "circle",
                             source: sourceId,
@@ -409,6 +391,17 @@ censusData.features.forEach(feature => {
                             }
                         });
 
+                        map.addLayer({
+                            id: `${sourceId}-unclustered-point`,
+                            type: "symbol",
+                            source: sourceId,
+                            filter: ["!", ["has", "point_count"]],
+                            layout: {
+                                "icon-image": "house-icon",
+                                "icon-size": 0.06 // Adjusted the icon size
+                            }
+                        });
+
                         
                         map.on("click", `${sourceId}-clusters`, async (e) => {
                             const features = map.queryRenderedFeatures(e.point, { layers: [`${sourceId}-clusters`] });
@@ -419,18 +412,14 @@ censusData.features.forEach(feature => {
                                 zoom
                             });
                         });
-                    
-                 
 
-                        let currentPopup = null;
                         map.on("click", `${sourceId}-unclustered-point`, (e) => {
-                            
                             const coordinates = e.features[0].geometry.coordinates.slice();
                             const properties = e.features[0].properties;
                             let HTML = '';
                             
 
-                            // Generate popup HTML based on sourceId
+                            // Example of how to generate popup HTML based on sourceId
                             if (sourceId === 'toronto') {
                                 HTML = `
                                     <p><strong>Address(es):</strong> ${properties.Addresses}</p>
@@ -441,7 +430,7 @@ censusData.features.forEach(feature => {
                                     <p><strong>Name:</strong> ${properties.name ? properties.name : "No Name"}</p>
                                     <p><strong>Address(es):</strong> ${properties.address}</p>
                                     <p><strong>Building Operator:</strong> ${properties.operator}</p>
-                                    <p><strong>Project Status:</strong> ${properties.project_status}</p>  
+                                    <p><strong>Project Status:</strong> ${properties.project_status}</p>
                                     <p><strong>Occupancy Year:</strong> ${properties.occupancy_year}</p>`;
                             } else if (sourceId === 'montreal') {
                                 const parsedProperties = JSON.parse(properties.properties);
@@ -457,30 +446,9 @@ censusData.features.forEach(feature => {
                                     <p><strong>City:</strong> ${parsedProperties.city}</p>
                                     <p><strong>Residential Units:</strong> ${parsedProperties.residential_units}</p>
                                     <p><strong>Housing Authority:</strong> ${parsedProperties.housing_authority}</p>`;
-                            } else if (sourceId === 'manitoba') {
-                                const parsedProperties = JSON.parse(properties.properties);
-                                HTML = `
-                                    <p><strong>Address(es):</strong> ${parsedProperties.formatted}</p>
-                                    <p><strong>Building Type:</strong> ${parsedProperties.original_Type}</p>`;
-                            } else if (sourceId === 'ottawa') {
-                                const parsedProperties = JSON.parse(properties.properties);
-                                HTML = `
-                                    <p><strong>Address(es):</strong> ${parsedProperties.Address}</p>
-                                    <p><strong>Community:</strong> ${parsedProperties.Community}</p>`;
-                            } else if (sourceId === 'calgary') {
-                                const parsedProperties = JSON.parse(properties.properties);
-                                HTML = `
-                                    <p><strong>Address(es):</strong> ${parsedProperties.formatted}</p>
-                                    <p><strong>Building Type:</strong> ${parsedProperties.original_Type}</p>`;
-                                    
                             }
 
-                            // Close the currently open popup
-                            if (currentPopup) {
-                                currentPopup.remove();
-                            }
-
-                            currentPopup = new maplibregl.Popup()
+                            new maplibregl.Popup()
                                 .setLngLat(coordinates)
                                 .setHTML(HTML)
                                 .addTo(map);
@@ -493,41 +461,21 @@ censusData.features.forEach(feature => {
                             map.getCanvas().style.cursor = "";
                         });
 
-    
-
                         return json;
                     } catch (error) {
                         console.error("Error fetching data: ", error);
                     }
                 }
 
-
-            
                 // Example of how to add data to different sources
                 await addDatatoSource("https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search?resource_id=22c57a77-de52-4206-b6a7-276fb1f7ae17&limit=236", "toronto");
                 await addDatatoSource("https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/non-market-housing/records?limit=100", "vancouver");
                 await addDatatoSource("https://donnees.montreal.ca/dataset/d26fad0f-2eae-44d5-88a0-2bc699fd2592/resource/1c02ead8-f680-495f-9675-6dd18bd3cad0/download/logsoc_donneesouvertes_20231231.geojson", "montreal");
                 await addDatatoSource("https://data.novascotia.ca/api/geospatial/2d4m-9e6x?method=export&format=GeoJSON", "novascotia");
-                await addDatatoSource("Winnipeg affordable housing.geojson", "manitoba");
-                await addDatatoSource("Ottawa Affordable Housing List.geojson", "ottawa");
-                await addDatatoSource("Calgary affordable housing.geojson", "calgary");
-
-        
-            // Reorder label layers to be on top of the polygons
-            const labelLayers = map.getStyle().layers.filter(layer => layer.type === 'symbol');
-
-            labelLayers.forEach(layer => {
-                map.moveLayer(layer.id);
-                });
             } catch (error) {
                 console.error("Error loading map:", error);
             }
-
-            
         });
-
-
-            
     </script>
 </body>
 </html>
