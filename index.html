@@ -19,32 +19,32 @@
         }
 
         .legend {
-            background-color: #000;
-            border-radius: 3px;
-            bottom: 70px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            color: #fff ;
-            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            padding: 10px;
-            position: absolute;
-            left: 20px;
-            z-index: 1;
-        }
+      background-color: #000;
+      border-radius: 3px;
+      bottom: 70px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      color: #fff ;
+      font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      padding: 10px;
+      position: absolute;
+      left: 20px;
+      z-index: 1;
+  }
 
-        .legend h4 {
-            margin: 0 0 10px;
-        }
+  .legend h4 {
+      margin: 0 0 10px;
+  }
 
-        .legend div span {
-            border-radius: 50%;
-            display: inline-block;
-            height: 10px;
-            margin-right: 5px;
-            width: 10px;
-        }
+  .legend div span {
+      border-radius: 50%;
+      display: inline-block;
+      height: 10px;
+      margin-right: 5px;
+      width: 10px;
+  }
 
-        /* Add a canvas element on the left side */
-        #info-canvas {
+/* Add a canvas element on the left side */
+#info-canvas {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -56,6 +56,7 @@
             padding: 10px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+
     </style>
 </head>
 <body>
@@ -78,9 +79,6 @@
           <div><span style="background-color: #810F7C"></span>100000</div>
           <div><span style="background-color: #4D004B"></span>&gt;120000</div>
       </div>
-
-    <!-- Information Canvas -->
-    <div id="info-canvas"></div>
     
     <!-- JavaScript -->
     <script>
@@ -91,7 +89,7 @@
             zoom: 3,
         });
 
-        let hoveredStateId = null;
+      
 
         map.on("load", async () => {
             try {
@@ -134,6 +132,8 @@
 
                 console.log("House icon loaded, colored (#BED2E6), and added successfully");
 
+
+                
                 // Function to add CensusMapper data with income information
                 async function addCensusMapperData() {
                     const censusMapperUrl = 'https://censusmapper.ca/api/v1/geo.geojson?dataset=CA21&regions={%22CSD%22:[%225915022%22,%222466112%22,%222466117%22,%222466127%22,%222466023%22,%222466102%22,%222466107%22,%222466142%22,%222466097%22,%222466087%22,%222466072%22,%222466007%22,%222466058%22,%222466032%22,%222466062%22,%222466047%22,%223506008%22,%223520005%22,%224611040%22,%224806016%22],%22CD%22:[%221203%22,%221202%22,%221201%22,%221204%22,%221205%22,%221207%22,%221206%22,%221208%22,%221209%22,%221210%22,%221212%22,%221214%22,%221213%22,%221216%22,%221217%22,%221218%22,%221215%22,%221211%22]}&level=CT&api_key=CensusMapper_a663240ee567b8e87e4ddd6270be6edc';
@@ -162,99 +162,242 @@
                 
 
                     map.addSource('regions', {
-                        'type': 'geojson',
-                        'data': censusData  
-                    });
+                    'type': 'geojson',
+                    'data': censusData  
+        });
 
-                    map.addLayer({
-                        'id': 'states-layer',
-                        'source': 'regions',
-                        'type': 'fill',
-                        'paint': {
-                            'fill-color': [
-                                'interpolate',
-                                ['linear'],
-                                ['get', 'householdIncome'],
-                                20000,
-                                '#E0ECF4',
-                                40000,
-                                '#BFD3E6',
-                                60000,
-                                '#8C96C6',
-                                80000,
-                                '#8C6BB1',
-                                100000,
-                                '#810F7C',
-                                120000,
-                                '#4D004B'
-                            ],
-                            'fill-opacity': 0.6
-                        }
-                    });
 
-                    // Add hover interaction to display income data on the canvas
-                    map.on('mousemove', 'states-layer', (e) => {
-                        if (e.features.length > 0) {
-                            if (hoveredStateId) {
-                                map.setFeatureState(
-                                    { source: 'regions', id: hoveredStateId },
-                                    { hover: false }
-                                );
-                            }
-                            hoveredStateId = e.features[0].id;
-                            map.setFeatureState(
-                                { source: 'regions', id: hoveredStateId },
-                                { hover: true }
-                            );
-                            
-                            const properties = e.features[0].properties;
-                            updateCanvas(properties);
-                        }
-                    });
+        map.addLayer(
+        {
+            'id': 'states-layer',
+            'source': 'regions',
+            'type': 'fill',
+            'paint': {
+                'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'householdIncome'],
+                    20000,
+                    '#E0ECF4',
+                    40000,
+                    '#BFD3E6',
+                    60000,
+                    '#8C96C6',
+                    80000,
+                    '#8C6BB1',
+                    100000,
+                    '#810F7C',
+                    120000,
+                    '#4D004B'
+                ],
+                'fill-opacity': 0.6
+            }},  
+        )
 
-                    map.on('mouseleave', 'states-layer', () => {
-                        if (hoveredStateId) {
-                            map.setFeatureState(
-                                { source: 'regions', id: hoveredStateId },
-                                { hover: false }
-                            );
-                        }
-                        hoveredStateId = null;
-                        clearCanvas();
-                    });
+    
+
+
+
+    // The feature-state dependent fill-opacity expression will render the hover effect
+        // when a feature's hover state is set to true.
+        map.addLayer({
+            'id': 'state-fills',
+            'type': 'fill',
+            'source': 'regions',
+            'layout': {},
+            'paint': {
+                'fill-color': '#ba7a22',
+                'fill-opacity': [
+                    'case',
+                    ['boolean', ['feature-state', 'hover'], false],
+                    0.7,
+                    0
+                ]
+            }
+        });
+
+        map.addLayer({
+            'id': 'state-borders',
+            'type': 'line',
+            'source': 'regions',
+            'layout': {},
+            'paint': {
+                'line-color': '#FFFFFF',
+                'line-width': 1.0
+            }
+        });
+     // When the user moves their mouse over the state-fill layer, we'll update the
+        // feature state for the feature under the mouse.
+        map.on('mousemove', 'state-fills', (e) => {
+            if (e.features.length > 0) {
+                if (hoveredStateId) {
+                    map.setFeatureState(
+                        {source: 'regions', id: hoveredStateId},
+                        {hover: false}
+                    );
+                }
+                hoveredStateId = e.features[0].id;
+                map.setFeatureState(
+                    {source: 'regions', id: hoveredStateId},
+                    {hover: true}
+                );
+            }
+        });
+
+        // When the mouse leaves the state-fill layer, update the feature state of the
+        // previously hovered feature.
+        map.on('mouseleave', 'state-fills', () => {
+            if (hoveredStateId) {
+                map.setFeatureState(
+                    {source: 'regions', id: hoveredStateId},
+                    {hover: false}
+                );
+            }
+            hoveredStateId = null;
+        });
+
+// Iterate through each feature in censusData
+censusData.features.forEach(feature => {
+    const id = feature.properties.GeoUID; // Assuming GeoUID is the identifier in incomeData
+
+    // Search for the corresponding income data based on GeoUID
+    let result = incomeData.find(data => data.GeoUID === id);
+
+    if (result) {
+        // Merge income data into feature properties
+        feature.properties = { ...feature.properties, ...result };
+    } else {
+        console.warn(`No income data found for GeoUID ${id}`);
+        // Optionally, handle or log the feature where income data is missing
+        console.log(feature);
+    }
+});
+
+
+        
+
+        // When a click event occurs on a feature in the states layer, open a popup at the
+        // location of the click, with description HTML from its properties.
+        map.on('click', 'states-layer', (e) => {
+            
+            const HTML = ` 
+            <p><strong>Region:</strong> ${e.features[0].properties["Region Name"]}</p>
+            <p><strong>Income ($):</strong> ${e.features[0].properties["v_CA21_906: Median total income of household in 2020 ($)"]}</p>
+            <p><strong>Area (sq km):</strong> ${e.features[0].properties["Area (sq km)"]}</p>
+            <p><strong>Dwellings:</strong> ${e.features[0].properties["Dwellings"]}</p>
+            <p><strong>Households:</strong> ${e.features[0].properties["Households"]}</p>`;
+
+
+            new maplibregl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(HTML)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the states layer.
+        map.on('mouseenter', 'states-layer', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'states-layer', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        
                 }
 
                 await addCensusMapperData();
 
-                async function addDataToSource() {
-                    const cityDataUrls = [
-                        { url: "toronto.json", name: "Toronto" },
-                        { url: "vancouver.json", name: "Vancouver" },
-                        { url: "montreal.json", name: "Montreal" },
-                        { url: "calgary.json", name: "Calgary" },
-                        { url: "ottawa.json", name: "Ottawa" },
-                        { url: "edmonton.json", name: "Edmonton" }
-                    ];
+                // Function to add data to different sources
+                async function addDatatoSource(url, sourceId) {
+                    try {
+                        let records;
+                        const db = await fetch(url);
+                        if (!db.ok) throw new Error("Network response was not ok");
 
-                    for (const city of cityDataUrls) {
-                        const response = await fetch(city.url);
-                        const data = await response.json();
-                        console.log(city.name, "Data:", data);
-                        map.addSource(city.name, {
+                        const json = await db.json();
+                        if (sourceId === 'vancouver') {
+                            records = [];
+                            for (let i = 0; i < 10; i++) {
+                                let url2 = `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/non-market-housing/records?order_by=index_number&limit=100&offset=${(100 * i)}`;
+                                const db2 = await fetch(url2);
+                                if (!db2.ok) throw new Error("Network response was not ok");
+
+                                const json2 = await db2.json();
+                                records = records.concat(json2.result?.records || json2.results || json2.features || []);
+                            }
+                        } else {
+                            records = json.result?.records || json.results || json.features || [];
+                        }
+                        console.log(records);
+                        const features = records.map((properties) => {
+                            try {
+                                let geometry = properties.geometry || properties.geom?.geometry;
+                                if (!geometry?.type) {
+                                    if (typeof properties.geometry === "string") {
+                                        geometry = JSON.parse(properties.geometry);
+                                    } else {
+                                        console.warn("Invalid geometry:", properties.geometry);
+                                        return null;
+                                    }
+                                }
+                                const { coordinates, type } = geometry;
+                                return {
+                                    type: "Feature",
+                                    geometry: { type, coordinates },
+                                    properties,
+                                };
+                            } catch (error) {
+                                console.error("Error parsing geometry:", error);
+                                return null;
+                            }
+                        }).filter(feature => feature !== null);
+
+                        const geojson = {
                             type: "geojson",
-                            data: data,
+                            data: {
+                                type: "FeatureCollection",
+                                features,
+                            }
+                        };
+
+                        map.addSource(sourceId, {
+                            type: "geojson",
+                            data: geojson.data,
                             cluster: true,
                             clusterMaxZoom: 14,
                             clusterRadius: 50,
                         });
 
                         map.addLayer({
-                            id: `${city.name}-clusters`,
+                            id: `${sourceId}-unclustered-point`,
+                            type: "symbol",
+                            source: sourceId,
+                            filter: ["!", ["has", "point_count"]],
+                            layout: {
+                                "icon-image": "house-icon",
+                                "icon-size": 0.06 // Adjusted the icon size
+                            }
+                        });
+
+                        map.addLayer({
+                            id: `${sourceId}-clusters`,
                             type: "circle",
-                            source: city.name,
+                            source: sourceId,
                             filter: ["has", "point_count"],
                             paint: {
-                                "circle-color": "#51bbd6",
+                                "circle-color": [
+                                    "step",
+                                    ["get", "point_count"],
+                                    "#BED2E6",
+                                    100,
+                                    "#8AA3BB",
+                                    750,
+                                    "#607D9B"
+                                ],
                                 "circle-radius": [
                                     "step",
                                     ["get", "point_count"],
@@ -262,123 +405,154 @@
                                     100,
                                     30,
                                     750,
-                                    40,
+                                    40
                                 ],
-                            },
+                                "circle-stroke-color": "white",
+                                "circle-stroke-width": 2
+                            }
                         });
 
                         map.addLayer({
-                            id: `${city.name}-cluster-count`,
+                            id: `${sourceId}-cluster-count`,
                             type: "symbol",
-                            source: city.name,
+                            source: sourceId,
                             filter: ["has", "point_count"],
                             layout: {
                                 "text-field": "{point_count_abbreviated}",
                                 "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-                                "text-size": 12,
-                            },
+                                "text-size": 12
+                            }
                         });
 
-                        map.addLayer({
-                            id: `${city.name}-unclustered-point`,
-                            type: "symbol",
-                            source: city.name,
-                            filter: ["!", ["has", "point_count"]],
-                            layout: {
-                                "icon-image": "house-icon",
-                                "icon-size": 1.5,
-                                "icon-anchor": "bottom",
-                                "text-field": ["get", "Address"],
-                                "text-offset": [0, 0.6],
-                                "text-anchor": "top",
-                                "text-size": 12,
-                                "text-transform": "uppercase",
-                                "text-letter-spacing": 0.05,
-                                "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-                            },
-                            paint: {
-                                "text-color": "#ffffff",
-                            },
-                        });
-
-                        map.on("click", `${city.name}-clusters`, (e) => {
-                            const features = map.queryRenderedFeatures(e.point, {
-                                layers: [`${city.name}-clusters`],
-                            });
+                        
+                        map.on("click", `${sourceId}-clusters`, async (e) => {
+                            e.originalEvent.stopPropagation();
+                            const features = map.queryRenderedFeatures(e.point, { layers: [`${sourceId}-clusters`] });
                             const clusterId = features[0].properties.cluster_id;
-                            map.getSource(city.name).getClusterExpansionZoom(clusterId, (err, zoom) => {
-                                if (err) return;
-
-                                map.easeTo({
-                                    center: features[0].geometry.coordinates,
-                                    zoom: zoom,
-                                });
+                            const zoom = await map.getSource(sourceId).getClusterExpansionZoom(clusterId);
+                            map.easeTo({
+                                center: features[0].geometry.coordinates,
+                                zoom
                             });
                         });
+                    
+                 
 
-                        map.on("click", `${city.name}-unclustered-point`, (e) => {
+                        let currentPopup = null;
+                        map.on("click", `${sourceId}-unclustered-point`, (e) => {
+                            // Stop event propagation so the polygon click event won't trigger
+                            
+                            // Close any existing popup
+                            if (currentPopup) {
+                                currentPopup.remove();
+                            }
                             const coordinates = e.features[0].geometry.coordinates.slice();
-                            const address = e.features[0].properties.Address;
-                            const status = e.features[0].properties.Status;
-                            const proposedUnits = e.features[0].properties.Proposed_units;
-                            const socialHousingUnits = e.features[0].properties.Social_housing_units;
-                            const affordableUnits = e.features[0].properties.Affordable_units;
-                            const approvedDate = e.features[0].properties.APPROVED_DATE;
-                            const byLawStatus = e.features[0].properties.BYLAW_STATUS;
+                            const properties = e.features[0].properties;
+                            
+                            
 
-                            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                            // Generate popup HTML based on sourceId
+                            if (sourceId === 'toronto') {
+                                HTML = `
+                                    <p><strong>Address(es):</strong> ${properties.Addresses}</p>
+                                    <p><strong>Building Status:</strong> ${properties.Status}</p>
+                                    <p><strong>Ward:</strong> ${properties.Ward}</p>`;
+                            } else if (sourceId === 'vancouver') {
+                                HTML = `
+                                    <p><strong>Name:</strong> ${properties.name ? properties.name : "No Name"}</p>
+                                    <p><strong>Address(es):</strong> ${properties.address}</p>
+                                    <p><strong>Building Operator:</strong> ${properties.operator}</p>
+                                    <p><strong>Project Status:</strong> ${properties.project_status}</p>  
+                                    <p><strong>Occupancy Year:</strong> ${properties.occupancy_year}</p>`;
+                            } else if (sourceId === 'montreal') {
+                                const parsedProperties = JSON.parse(properties.properties);
+                                HTML = `
+                                    <p><strong>Name:</strong> ${parsedProperties.nomprojet}</p>
+                                    <p><strong>Program Start Date:</strong> ${parsedProperties.an_program}</p>
+                                    <p><strong>Street Name:</strong> ${parsedProperties.nomrue}</p>`;
+                            } else if (sourceId === 'novascotia') {
+                                const parsedProperties = JSON.parse(properties.properties);
+                                HTML = `
+                                    <p><strong>Name:</strong> ${parsedProperties.name}</p>
+                                    <p><strong>Address(es):</strong> ${parsedProperties.address}</p>
+                                    <p><strong>City:</strong> ${parsedProperties.city}</p>
+                                    <p><strong>Residential Units:</strong> ${parsedProperties.residential_units}</p>
+                                    <p><strong>Housing Authority:</strong> ${parsedProperties.housing_authority}</p>`;
+                            } else if (sourceId === 'manitoba') {
+                                const parsedProperties = JSON.parse(properties.properties);
+                                HTML = `
+                                    <p><strong>Address(es):</strong> ${parsedProperties.formatted}</p>
+                                    <p><strong>Building Type:</strong> ${parsedProperties.original_Type}</p>`;
+                            } else if (sourceId === 'ottawa') {
+                                const parsedProperties = JSON.parse(properties.properties);
+                                HTML = `
+                                    <p><strong>Address(es):</strong> ${parsedProperties.Address}</p>
+                                    <p><strong>Community:</strong> ${parsedProperties.Community}</p>
+                                    <p><strong>Description:</strong> ${parsedProperties.Description}</p>
+                                    <p><strong>Washer available:</strong> ${parsedProperties["Washer available"]}</p>
+                                    <p><strong>Dryer Available:</strong> ${parsedProperties["Dryer Available"]}</p>
+                                    <p><strong>Elevator:</strong> ${parsedProperties.Elevator}</p>
+                                    <p><strong>Seniors only:</strong> ${parsedProperties["Seniors only"]}</p>
+                                    <p><strong>Image:</strong> <img src="${parsedProperties.Image}" alt="Image of the property" width="200" height="200"></p>`;
+                            } else if (sourceId === 'calgary') {
+                                const parsedProperties = JSON.parse(properties.properties);
+                                HTML = `
+                                    <p><strong>Address(es):</strong> ${parsedProperties.formatted}</p>
+                                    <p><strong>Building Type:</strong> ${parsedProperties.original_Type}</p>`;
+                                    
                             }
 
-                            const popupContent = `
-                                <h3>${address}</h3>
-                                <p>Status: ${status}</p>
-                                <p>Proposed Units: ${proposedUnits}</p>
-                                <p>Social Housing Units: ${socialHousingUnits}</p>
-                                <p>Affordable Units: ${affordableUnits}</p>
-                                ${approvedDate ? `<p>Approved Date: ${approvedDate}</p>` : ''}
-                                ${byLawStatus ? `<p>By-law Status: ${byLawStatus}</p>` : ''}
-                            `;
 
-                            new maplibregl.Popup()
+                            currentPopup = new maplibregl.Popup()
                                 .setLngLat(coordinates)
-                                .setHTML(popupContent)
+                                .setHTML(HTML)
                                 .addTo(map);
                         });
 
-                        map.on("mouseenter", `${city.name}-unclustered-point`, () => {
+                        map.on("mouseenter", `${sourceId}-clusters`, () => {
+                            
                             map.getCanvas().style.cursor = "pointer";
                         });
-
-                        map.on("mouseleave", `${city.name}-unclustered-point`, () => {
+                        map.on("mouseleave", `${sourceId}-clusters`, () => {
+                            e.originalEvent.stopPropagation();
                             map.getCanvas().style.cursor = "";
                         });
+
+    
+
+                        return json;
+                    } catch (error) {
+                        console.error("Error fetching data: ", error);
                     }
                 }
 
-                await addDataToSource();
+
+            
+                // Example of how to add data to different sources
+                await addDatatoSource("https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/datastore_search?resource_id=22c57a77-de52-4206-b6a7-276fb1f7ae17&limit=236", "toronto");
+                await addDatatoSource("https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/non-market-housing/records?limit=100", "vancouver");
+                await addDatatoSource("https://donnees.montreal.ca/dataset/d26fad0f-2eae-44d5-88a0-2bc699fd2592/resource/1c02ead8-f680-495f-9675-6dd18bd3cad0/download/logsoc_donneesouvertes_20231231.geojson", "montreal");
+                await addDatatoSource("https://data.novascotia.ca/api/geospatial/2d4m-9e6x?method=export&format=GeoJSON", "novascotia");
+                await addDatatoSource("Winnipeg affordable housing.geojson", "manitoba");
+                await addDatatoSource("Ottawa Affordable Housing List.geojson", "ottawa");
+                await addDatatoSource("Calgary affordable housing.geojson", "calgary");
+
+        
+            // Reorder label layers to be on top of the polygons
+            const labelLayers = map.getStyle().layers.filter(layer => layer.type === 'symbol');
+
+            labelLayers.forEach(layer => {
+                map.moveLayer(layer.id);
+                });
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error loading map:", error);
             }
+
+            
         });
 
-        // Function to update canvas with income data
-        function updateCanvas(properties) {
-            const canvas = document.getElementById('info-canvas');
-            canvas.innerHTML = `
-                <h4>Region Information</h4>
-                <p><strong>ID:</strong> ${properties.id}</p>
-                <p><strong>Median Income:</strong> $${properties.householdIncome ? properties.householdIncome.toLocaleString() : 'N/A'}</p>
-                <p><strong>Other Data:</strong> ${properties.otherData ? properties.otherData : 'N/A'}</p>
-            `;
-        }
 
-        // Function to clear the canvas when the user is not hovering
-        function clearCanvas() {
-            const canvas = document.getElementById('info-canvas');
-            canvas.innerHTML = '<h4>Hover over a region to see details</h4>';
-        }
-
+            
     </script>
 </body>
 </html>
