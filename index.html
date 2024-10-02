@@ -7,52 +7,10 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- External CSS and JS libraries -->
       <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@4.3.0/dist/maplibre-gl.css' />
+      <link rel='stylesheet' href='./syles.css' />
       <script src='https://unpkg.com/maplibre-gl@4.3.0/dist/maplibre-gl.js'></script>
       <!-- Internal CSS -->
-      <style>
-         body { margin: 0; padding: 0; }
-         html, body, #map { height: 95%; }
-         h1 {
-         border-spacing: 1px;
-         padding-left: 1%;
-         font-family: Verdana, Geneva, Tahoma, sans-serif; 
-         }
-         .legend {
-         background-color: #000;
-         border-radius: 3px;
-         bottom: 70px;
-         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-         color: #fff ;
-         font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-         padding: 10px;
-         position: absolute;
-         left: 20px;
-         z-index: 1;
-         }
-         .legend h4 {
-         margin: 0 0 10px;
-         }
-         .legend div span {
-         border-radius: 50%;
-         display: inline-block;
-         height: 10px;
-         margin-right: 5px;
-         width: 10px;
-         }
-         /* Add a canvas element on the left side */
-         #info-canvas {
-         position: absolute;
-         top: 10px;
-         left: 10px;
-         width: 300px;
-         height: 150px;
-         border: 1px solid #ddd;
-         background-color: white;
-         z-index: 2;
-         padding: 10px;
-         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-         }
-      </style>
+     
    </head>
    <body>
       <!-- Header -->
