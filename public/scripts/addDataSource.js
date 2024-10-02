@@ -191,6 +191,9 @@ async function addDatatoSource(url, sourceId) {
 
                 }
                 else if (sourceId === 'NHS-DATA') {
+
+                    // TODO - Add functionality to display the data in the popup for NHS geojson
+                    
                     const parsedProperties = JSON.parse(properties.properties);
                     HTML = `
                             hellowWorld`;
