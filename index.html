@@ -129,7 +129,7 @@
                  async function addCensusMapperData() {
          
                      const censusMapperUrl = 'https://censusmapper.ca/api/v1/geo.geojson?dataset=CA21&regions={%22CSD%22:[%225915022%22,%222466112%22,%222466117%22,%222466127%22,%222466023%22,%222466102%22,%222466107%22,%222466142%22,%222466097%22,%222466087%22,%222466072%22,%222466007%22,%222466058%22,%222466032%22,%222466062%22,%222466047%22,%223506008%22,%223520005%22,%224611040%22,%224806016%22],%22CD%22:[%221203%22,%221202%22,%221201%22,%221204%22,%221205%22,%221207%22,%221206%22,%221208%22,%221209%22,%221210%22,%221212%22,%221214%22,%221213%22,%221216%22,%221217%22,%221218%22,%221215%22,%221211%22]}&level=CT&api_key=CensusMapper_a663240ee567b8e87e4ddd6270be6edc';
-                     const incomeDataUrl = 'Data Income List.json';
+                     const incomeDataUrl = 'data/Data Income List.json';
          
                      const [geoResponse, incomeResponse] = await Promise.all([
                          fetch(censusMapperUrl),
@@ -444,7 +444,7 @@
          
                                  let jsonData;
          
-         const DATA_URL = "NHS_DATA.json"; // URL constant
+         const DATA_URL = "data/NHS_DATA.json"; // URL constant
          
          async function loadNHSData() {
          try {
@@ -637,10 +637,10 @@
                  await addDatatoSource("https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/non-market-housing/records?limit=100", "vancouver");
                  await addDatatoSource("https://donnees.montreal.ca/dataset/d26fad0f-2eae-44d5-88a0-2bc699fd2592/resource/1c02ead8-f680-495f-9675-6dd18bd3cad0/download/logsoc_donneesouvertes_20231231.geojson", "montreal");
                  await addDatatoSource("https://data.novascotia.ca/api/geospatial/2d4m-9e6x?method=export&format=GeoJSON", "novascotia");
-                 await addDatatoSource("Winnipeg affordable housing.geojson", "manitoba");
-                 await addDatatoSource("Ottawa Affordable Housing List.geojson", "ottawa");
-                 await addDatatoSource("Calgary affordable housing.geojson", "calgary");
-                 await addDatatoSource("NHS DATA.json", "jsonData");
+                 await addDatatoSource("data/Winnipeg affordable housing.geojson", "manitoba");
+                 await addDatatoSource("data/Ottawa Affordable Housing List.geojson", "ottawa");
+                 await addDatatoSource("data/Calgary affordable housing.geojson", "calgary");
+                 await addDatatoSource("data/NHS DATA.json", "jsonData");
          
                  
                  
