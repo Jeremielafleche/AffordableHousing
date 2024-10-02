@@ -1,7 +1,7 @@
-async function addCensusMapperData(map) {
+async function fetchCensusMapperData(map) {
 
     const censusMapperUrl = 'https://censusmapper.ca/api/v1/geo.geojson?dataset=CA21&regions={%22CSD%22:[%225915022%22,%222466112%22,%222466117%22,%222466127%22,%222466023%22,%222466102%22,%222466107%22,%222466142%22,%222466097%22,%222466087%22,%222466072%22,%222466007%22,%222466058%22,%222466032%22,%222466062%22,%222466047%22,%223506008%22,%223520005%22,%224611040%22,%224806016%22],%22CD%22:[%221203%22,%221202%22,%221201%22,%221204%22,%221205%22,%221207%22,%221206%22,%221208%22,%221209%22,%221210%22,%221212%22,%221214%22,%221213%22,%221216%22,%221217%22,%221218%22,%221215%22,%221211%22]}&level=CT&api_key=CensusMapper_a663240ee567b8e87e4ddd6270be6edc';
-    const incomeDataUrl = 'public/data/Data Income List.json';
+    const incomeDataUrl = 'public/data/jsonData/Data Income List.json';
 
     const [geoResponse, incomeResponse] = await Promise.all([
         fetch(censusMapperUrl),

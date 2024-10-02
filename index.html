@@ -84,7 +84,7 @@
           map.addImage("house-icon", houseIconData);
 
           // Function to add CensusMapper data
-         const censusData= await addCensusMapperData(map);
+         const censusData= await fetchCensusMapperData(map);
 
           // Add region data as a single source and layer
           map.addSource("regions", {
@@ -203,10 +203,10 @@
             "https://data.novascotia.ca/api/geospatial/2d4m-9e6x?method=export&format=GeoJSON",
             "novascotia"
           );
-          await addDatatoSource("public/data/Winnipeg affordable housing.geojson", "manitoba");
-          await addDatatoSource("public/data/Ottawa Affordable Housing List.geojson", "ottawa");
-          await addDatatoSource("public/data/Calgary affordable housing.geojson", "calgary");
-          await addDatatoSource("public/data/NHS-DATA.geojson", "NHS-DATA");
+          await addDatatoSource("public/data/geojsonData/Winnipeg affordable housing.geojson", "manitoba");
+          await addDatatoSource("public/data/geojsonData/Ottawa Affordable Housing List.geojson", "ottawa");
+          await addDatatoSource("public/data/geojsonData/Calgary affordable housing.geojson", "calgary");
+          await addDatatoSource("public/data/geojsonData/NHS-DATA.geojson", "NHS-DATA");
         } catch (err) {
           console.error(err);
         }
