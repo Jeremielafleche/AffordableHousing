@@ -190,6 +190,12 @@ async function addDatatoSource(url, sourceId) {
                             <p><strong>Building Type:</strong> ${parsedProperties.original_Type}</p>`;
 
                 }
+                else if (sourceId === 'NHS-DATA') {
+                    const parsedProperties = JSON.parse(properties.properties);
+                    HTML = `
+                            hellowWorld`;
+
+                }
 
 
                 currentPopup = new maplibregl.Popup()
