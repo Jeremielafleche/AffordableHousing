@@ -139,11 +139,6 @@ async function addDatatoSource(url, sourceId) {
             const coordinates = e.features[0].geometry.coordinates.slice();
             const properties = e.features[0].properties;
 
-            async function addDatatoSource(url, sourceId) {
-
-
-
-
 
                 // Generate popup HTML based on sourceId
                 if (sourceId === 'toronto') {
@@ -201,7 +196,7 @@ async function addDatatoSource(url, sourceId) {
                     .setLngLat(coordinates)
                     .setHTML(HTML)
                     .addTo(map);
-            }
+            
         });
 
         map.on("mouseenter", `${sourceId}-clusters`, () => {
